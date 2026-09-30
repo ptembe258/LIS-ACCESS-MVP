@@ -1,0 +1,41 @@
+{
+  "a8d0eea9-8182-45eb-b1ee-622cf0751c96": {
+    "intervention": "Reparação / manutenção do pavimento",
+    "entity": null,
+    "locked": false,
+    "cost": null,
+    "time_hours": null,
+    "complexity": null,
+    "status": "Por iniciar",
+    "parish": "São Domingos de Benfica",
+    "street": "Pista Caminho da Água",
+    "obstacle_type_pt": "Pavimento degradado",
+    "obstacle_type_en": "Damaged pavement"
+  },
+  "dbb0f3e8-6a3a-4ec9-b977-62d50eb803be": {
+    "intervention": "Criar percurso pedonal / passeio acessível",
+    "entity": null,
+    "locked": false,
+    "cost": null,
+    "time_hours": null,
+    "complexity": null,
+    "status": "Por iniciar",
+    "parish": "São Domingos de Benfica",
+    "street": "Estrada do Barcal",
+    "obstacle_type_pt": "Ausência de Passeio ",
+    "obstacle_type_en": "No sidewalk"
+  },
+  "ec32a2e0-4dd5-4701-9f1d-95658a2f09e0": {
+    "intervention": "Desobstrução / regularização da ocupação",
+    "entity": null,
+    "locked": false,
+    "cost": null,
+    "time_hours": null,
+    "complexity": null,
+    "status": "Por iniciar",
+    "parish": "São Domingos de Benfica",
+    "street": "Rua General Firmino Miguel",
+    "obstacle_type_pt": "Elemento de construção",
+    "obstacle_type_en": "Construction element"
+  }
+}
