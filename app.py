@@ -12,7 +12,7 @@ from folium.plugins import MarkerCluster, HeatMap, Draw
 from streamlit_folium import st_folium
 
 BASE_DIR = Path(__file__).parent
-DATA_DIR = BASE_DIR / "data"
+DATA_DIR = BASE_DIR
 STATE_FILE = DATA_DIR / "task_state.json"
 
 st.set_page_config(
