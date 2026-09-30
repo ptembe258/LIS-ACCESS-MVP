@@ -1,4 +1,5 @@
 
+
 from pathlib import Path
 import json
 import math
@@ -394,24 +395,23 @@ def poi_style(poi_type):
     return "📍", "#65746e"
 
 def add_base_layers(m):
-    # Base map without API key
     folium.TileLayer(
         tiles="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",
         attr="© OpenStreetMap contributors",
         name="OpenStreetMap",
-        overlay=False,
-        control=True,
-        show=True
+        overlay=False, control=True, show=True
     ).add_to(m)
-
-    # Satellite layer without user API key
+    folium.TileLayer(
+        tiles="https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png",
+        attr="© OpenStreetMap contributors © CARTO",
+        name="Mapa claro / Light map",
+        overlay=False, control=True, show=False
+    ).add_to(m)
     folium.TileLayer(
         tiles="https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}",
         attr="Tiles © Esri",
         name="Satélite / Satellite",
-        overlay=False,
-        control=True,
-        show=False
+        overlay=False, control=True, show=False
     ).add_to(m)
 
 @st.cache_data
@@ -699,123 +699,8 @@ with tabs[1]:
         if not poly_df.empty:
             summary = poly_df[type_col].value_counts().rename_axis(tr["obstacle_type"]).reset_index(name="n")
             st.dataframe(summary, use_container_width=True, hide_index=True)
-
-            st.markdown("#### Obstáculos da área desenhada" if lang == "PT" else "#### Obstacles in drawn area")
-            poly_cols = [
-                type_col, "street_name", "freguesia", "uit",
-                "latitude", "longitude", "photo", "obstacle_id"
-            ]
-            poly_cols = [c for c in poly_cols if c in poly_df.columns]
-            poly_rename = {
-                type_col: tr["obstacle_type"],
-                "street_name": tr["street"],
-                "freguesia": tr["parish"],
-                "uit": tr["uit"],
-                "latitude": "Latitude",
-                "longitude": "Longitude",
-                "photo": tr["photo"],
-                "obstacle_id": "ID",
-            }
-            poly_display = poly_df[poly_cols].rename(columns=poly_rename)
-
-            st.dataframe(
-                poly_display,
-                use_container_width=True,
-                hide_index=True,
-                column_config={
-                    tr["photo"]: st.column_config.LinkColumn(
-                        tr["photo"],
-                        display_text="Abrir" if lang == "PT" else "Open"
-                    )
-                } if tr["photo"] in poly_display.columns else None
-            )
-
-            polygon_csv = poly_display.to_csv(index=False).encode("utf-8-sig")
-            st.download_button(
-                "Exportar obstáculos da área desenhada (CSV)"
-                if lang == "PT"
-                else "Export obstacles from drawn area (CSV)",
-                data=polygon_csv,
-                file_name="lis_access_obstaculos_area_desenhada.csv"
-                if lang == "PT"
-                else "lis_access_obstacles_drawn_area.csv",
-                mime="text/csv",
-                key="download_polygon_obstacles"
-            )
     else:
         st.info(tr["no_polygon"])
-
-
-    # ---------- FILTERED RESULTS TABLE ----------
-    st.divider()
-    st.subheader("Obstáculos filtrados" if lang == "PT" else "Filtered obstacles")
-    st.caption(
-        "A tabela abaixo corresponde exatamente aos filtros selecionados na barra lateral."
-        if lang == "PT"
-        else "The table below corresponds exactly to the filters selected in the sidebar."
-    )
-
-    filtered_table = filtered.copy()
-
-    filtered_display_cols = [
-        type_col,
-        "street_name",
-        "freguesia",
-        "uit",
-        "latitude",
-        "longitude",
-        "photo",
-        "obstacle_id",
-    ]
-    filtered_display_cols = [
-        c for c in filtered_display_cols
-        if c in filtered_table.columns
-    ]
-
-    filtered_rename = {
-        type_col: tr["obstacle_type"],
-        "street_name": tr["street"],
-        "freguesia": tr["parish"],
-        "uit": tr["uit"],
-        "latitude": "Latitude",
-        "longitude": "Longitude",
-        "photo": tr["photo"],
-        "obstacle_id": "ID",
-    }
-
-    filtered_display = filtered_table[filtered_display_cols].rename(columns=filtered_rename)
-
-    st.write(
-        f"{len(filtered_display)} obstáculos encontrados"
-        if lang == "PT"
-        else f"{len(filtered_display)} obstacles found"
-    )
-
-    st.dataframe(
-        filtered_display,
-        use_container_width=True,
-        hide_index=True,
-        column_config={
-            tr["photo"]: st.column_config.LinkColumn(
-                tr["photo"],
-                display_text="Abrir" if lang == "PT" else "Open"
-            )
-        } if tr["photo"] in filtered_display.columns else None
-    )
-
-    filtered_csv = filtered_display.to_csv(index=False).encode("utf-8-sig")
-    st.download_button(
-        "Exportar obstáculos filtrados (CSV)"
-        if lang == "PT"
-        else "Export filtered obstacles (CSV)",
-        data=filtered_csv,
-        file_name="lis_access_obstaculos_filtrados.csv"
-        if lang == "PT"
-        else "lis_access_filtered_obstacles.csv",
-        mime="text/csv",
-        key="download_filtered_obstacles_map"
-    )
-
 
 # ---------- TAB 2 PROXIMITY ----------
 with tabs[2]:
@@ -1130,3 +1015,13 @@ with tabs[4]:
         )
         st.dataframe(by_par, use_container_width=True, hide_index=True)
 
+st.divider()
+export_df = filtered.copy()
+csv = export_df.to_csv(index=False).encode("utf-8-sig")
+st.download_button(
+    tr["download"],
+    data=csv,
+    file_name="lis_access_filtered_obstacles.csv",
+    mime="text/csv"
+)
+        
